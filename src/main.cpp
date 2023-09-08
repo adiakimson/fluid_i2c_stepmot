@@ -99,6 +99,31 @@ void ResetI2C()
     Wire.begin();
 }
 
+//wykrycie zdarzenia od raspberry
+
+void eventRpi()
+{
+    if(Serial.available()!=0) //jeśli coś do odczytu po USB
+    {
+       char mssg = Serial.read();
+       // zalożyłam tutaj że otrzymanie od rpi char u oznacza up a char d oznacza down
+       // można to zmienić
+       if(mssg == 'u')
+       {
+        req_up = true;
+       }
+       else if(mssg == 'd')
+       {
+        req_down = true;
+       }
+       else
+       {
+        Serial.println("Otrzymano inną wiadomość od Raspberry Pi");
+       }
+    }
+    
+}
+
 //wykrycie zdarzenia od slave
 
 void eventOccured(int pion)
@@ -269,6 +294,7 @@ else if(flag4 == true)
 else
 {
     Serial.println("Brak wiadomości od peryferiów"); //tymczasowo w celach debug
+    eventRpi();
 }
 
 }
